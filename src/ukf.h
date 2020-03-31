@@ -3,6 +3,7 @@
 
 #include "Eigen/Dense"
 #include "measurement_package.h"
+using namespace std;
 
 class UKF {
  public:
@@ -41,6 +42,8 @@ class UKF {
    */
   void UpdateRadar(MeasurementPackage meas_package);
 
+  Eigen::MatrixXd PredictMeasurement(Eigen::MatrixXd Xsig_);
+
 
   // initially set to false, set to true in first call of ProcessMeasurement
   bool is_initialized_;
@@ -54,11 +57,17 @@ class UKF {
   // state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
   Eigen::VectorXd x_;
 
+  Eigen::VectorXd x_aug_;
+
   // state covariance matrix
   Eigen::MatrixXd P_;
 
+  Eigen::MatrixXd P_aug_;
+
+
   // predicted sigma points matrix
   Eigen::MatrixXd Xsig_pred_;
+  Eigen::MatrixXd Xsig_aug_;
 
   // time when the state is true, in us
   long long time_us_;
@@ -95,6 +104,17 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
+  
+  //measurement matrix
+  Eigen::MatrixXd H_;
+
+  //Noise Matrices
+  Eigen::MatrixXd R_laser_;
+  Eigen::MatrixXd R_radar_;
+
+  //Measurement Update Matrix
+  Eigen::MatrixXd Zsig_upd_;
+
 };
 
 #endif  // UKF_H
